@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tabl_btsrp">
   <table class="table table-hover table-dark" v-for="(title,index) in titles" :key="index" >
     <thead >
     <tr>
@@ -7,7 +7,7 @@
 
        </tr>
     </thead>
-    <tbody v-for="(val,index) in valToJSON" :key="index">
+    <tbody v-for="(val,index) in objectJSON" :key="index">
     <tr>
       <td>
         <input id="index" v-model="val[title.toLowerCase()]" />
@@ -21,14 +21,21 @@
 <script>
 export default {
 name: "TableBootsrap",
-  props: ['titles', 'valToJSON'],
+  props: ['titles', 'objectJSON'],
 }
 </script>
 
 <style scoped>
+.tabl_btsrp{
+  display: flex;
+}
 .table{
+  border-radius: 15px;
   margin: 0 auto;
   max-width: 300px !important;
-
+  margin-top: 30px;
+  border-top:none !important;
+  text-align: center;
+  margin-left: 7px
 }
 </style>
