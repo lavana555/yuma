@@ -1,36 +1,39 @@
 <template>
   <div>
-  <table >
-    <tr>
-      <th>Name</th>
-      <th>Year</th>
 
-    </tr>
-    <tr v-for="(data,index) in dataObject" :key="index">
-
-      <td>{{data.name}}</td>
-      <td>{{data.year}}</td>
-    </tr>
-     </table>
-    <button @click="setDate">setData</button>
+    <h2>hello table</h2>
+    <div v-for="(title,index) in titles" :key="index">
+      <h3>{{ title }}</h3>
+      <ul v-for="(val,index) in valToJSON" :key="index">
+        <li>
+          <input id="index" v-model="val[title.toLowerCase()]" @change="someHandler"/>
+        </li>
+      </ul>
     </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: "Table",
-  //props:['dataObject'],
-  methods:{
-    setDate(){
-      alert(this.dataObject)
-      console.log('table:',typeof (this.dataObject))
+  props: ['titles', 'valToJSON'],
+  methods: {
+    someHandler(e, index) {
+      // eslint-disable-next-line no-debugger
+      // debugger
+      console.log(e.currentTarget.value)
+      console.log(index)
+
+    },
+  },
+  data() {
+    return {
+      va: null,
+      liitem: null
     }
   },
-  // data(){
-  //   return{
-  //    dataObject: [{name:"Name 1",year:"2010"},{name:"Name 2",year:"1997"},{name:"Name 3",year:"2004"}]
-  // }
-  // }
+
+
 }
 
 </script>

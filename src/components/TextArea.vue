@@ -1,72 +1,86 @@
 <template>
-  <div>
-    <h2>TextArea</h2>
+  <div class="form-group">
+    <form v-on:submit.prevent="submit">
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Enter your data</label>
+        <textarea
+            class="form-control" id="exampleFormControlTextarea1"
 
-    <textarea id="TTP"
-              cols=50 rows=10
-        v-model="data" placeholder="enter please your JSON object" ></textarea>
-    <button @click="continuebtn">Continue</button>
-    <Table  v-bind:dataObject="dataObject"/>
+            cols=70 rows=2
+            type="text"
+            v-model="modelform" placeholder="enter please your JSON object"></textarea>
+      </div>
+      <button type="button" class="btn btn-dark" @click="submit">Continue</button>
+      <button type="button" class="btn btn-success" @click="setValue">Watch completed</button>
+      <!--    <Table-->
+      <!--        v-bind:titles="titles"-->
+      <!--        v-bind:valToJSON="valToJSON"-->
+      <!--    />-->
+      <TableBootsrap
+          v-bind:titles="titles"
+          v-bind:valToJSON="valToJSON"
+      />
+    </form>
   </div>
+
 </template>
 
 <script>
-import Table from "@/components/Table";
+//import Table from "@/components/Table";
+import TableBootsrap from "@/components/TableBootsrap";
+
 export default {
-name: "TextArea",
-  components: {Table},
-  data(){
-  return{
-   // dataaaa:'[{name:"Name 1",year:"2010"},{name:"Name 2",year:"1997"},{name:"Name 3",year:"2004"}]',
-    dataaaa:'[{"name":"Name 1","year":"2010"},{"name":"Name 2","year":"1997"},{"name":"Name 3","year":"2004"}]',
-    //dataObject:[{name:"Name 1",year:"2010"},{name:"Name 2",year:"1997"},{name:"Name 3",year:"2004"}]
-    dataObject:[],
-    results:null,
-    information:null,
-    numbers : '[0, 1, "2", 3]',
-    numberMas:[],
-    numberMass:[]
-
-  }
+  name: "TextArea",
+  components: {
+    TableBootsrap,
+    //Table
   },
-  methods:{
-    continuebtn(){
-console.log(typeof (this.numbers))
-      this.numberMas=JSON.parse(this.numbers)
-      console.log('type:',typeof (this.numberMas))
-      console.log('mas:',this.numberMas)
-   console.log(typeof(this.dataaaa))
-//d=this.dataaaa.split()
-      for (var i=0; i<dataArray.length; i++){
-        dataArray[i] = JSON.parse(dataArray[i]);
-        console.log(dataArray[i]);
-       this.numberMass=JSON.parse('[{ 1,2010}]')
-  //     console.log('type:',typeof (this.numberMas))
-  //     console.log('mas:',this.numberMas)
-      //  this.information = document.getElementById("TTP");
-      //  this.results=JSON.parse('information')
-      // console.log('resultstype:',typeof (this.results))
-      // console.log('results:',typeof (this.results))
-    //   alert(typeof(this.data))
-    //   console.log('data',this.data)
-    //   this.dataObject = JSON.parse(this.data); // парсим пользовательскую строку, в этот момент отрисовываются карточки
-    // console.log('dsfsd:',this.dataObject)
-      // this.dataObject.forEach(element => { // заполняем titles, отрисовываюся заголовки карточек
-      //   Object.keys(element).filter((item) => {
-      //     let name = item.slice(0,1).toUpperCase() + item.slice(1)
-      //     this.titles.includes(name)? '': this.titles.push(name);
-      //   })
-      // })
+  data() {
+    return {
+      formValue: null,
+      modelform: null,
+      dataObject: [],
+      results: null,
+      information: null,
+      numberMas: [],
+      numberMass: [],
+      valToJSON: null,
+      titles: [],
+      isFetching: true,
+      newval: null
 
-
+    }
+  },
+  methods: {
+    submit() {
+      this.valToJSON = JSON.parse(this.modelform);
+      this.valToJSON.forEach(element => {
+        Object.keys(element).filter((item) => {
+          let name = item.slice(0, 1).toUpperCase() + item.slice(1)
+          this.titles.includes(name) ? '' : this.titles.push(name);
+        })
+      })
 
     },
+    setValue() {
+      this.modelform = JSON.stringify(this.newval);
 
+    }
   },
-
+  watch: {
+    valToJSON: function () {
+      console.log('watch:', this.valToJSON)
+      this.newval = this.valToJSON
+      //this.isFetching=!this.isFetching
+    }
+  }
 }
 </script>
 
 <style scoped>
+.form-group {
+  max-width: 500px;
+  margin: 0 auto;
+}
 
 </style>
