@@ -112,14 +112,17 @@ export default {
        // csv.join('\r\n');
       console.log('csvObject:',csvObject)
       // var fs = require('fs');
-      this.writeFile('data.csv',csvObject , 'utf8', function (err) {
-        if (err) {
-          console.log('Some error occured - file either not saved or corrupted file saved.');
-        } else{
-          console.log('It\'s saved!');
-        }
-        // callback("data_saved | assets/distanceInfo.csv")
-      });
+      const csvBlob = new Blob([csvObject], { type: "text/csv" });
+      const blobUrl = URL.createObjectURL(csvBlob);
+      const anchorElement = document.createElement("a");
+
+      anchorElement.href = blobUrl;
+      anchorElement.download = "data.csv";
+      anchorElement.click();
+      // const fileWriter = new FileWriter("data.csv");
+      // fileWriter.open() ;
+      // fileWriter.writeLine("Another line") ;
+      // fileWriter.close()
     }
   },
   watch: {
