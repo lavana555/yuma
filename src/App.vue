@@ -1,22 +1,18 @@
 <template>
   <div id="app">
     <TextArea/>
-
-
-    <ModalError />
-
-  </div>
+     </div>
 </template>
 
 <script>
 import TextArea from "@/components/TextArea";
 
 
+
 export default {
   name: 'App',
   components: {
-
-    TextArea,
+     TextArea,
 
   }
 }

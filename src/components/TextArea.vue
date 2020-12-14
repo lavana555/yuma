@@ -16,31 +16,34 @@
       <div class="btn-block">
         <button v-if="isFetching" type="button" class="btn btn-dark" @click="submit">Continue</button>
         <button v-if="!isFetching" type="button" class="btn btn-success" @click="setValue">Unload</button>
+        <button  type="button" class="btn btn-success" @click="saveTocsv">saveToCSV</button>
       </div>
       <TableBootsrap
-          v-bind:titles="titles"
+          v-bind:headers="headers"
           v-bind:objectJSON="objectJSON"
       />
     </form>
+    <LoadData v-on:getToCSV="getToCSV"/>
   </div>
 
 </template>
 
 <script>
 import TableBootsrap from "@/components/TableBootsrap";
+import LoadData from "@/components/LoadData";
 
 export default {
   name: "TextArea",
   components: {
+    LoadData,
     TableBootsrap,
   },
   data() {
     return {
       formValue: null,
       modelform: null,
-      dataObject: [],
       objectJSON: null,
-      titles: [],
+      headers: [],
       isFetching: true,
       newval: null,
       textPlaceholder: '[\n' +
@@ -48,25 +51,42 @@ export default {
           '    {"name":"...","year":"..."}\n' +
           ']',
       regexp: '',
-      error: null
+      error: null,
+      jsonObject: null
+
 
     }
   },
   methods: {
     submit() {
+      this.headers = []
       if (this.modelform === null) {
         this.error = 'incorrect value'
-
       } else {
         this.objectJSON = JSON.parse(this.modelform);
-        this.objectJSON.forEach(element => {
-          Object.keys(element).filter((item) => {
-            let name = item.slice(0, 1).toUpperCase() + item.slice(1)
-            this.titles.includes(name) ? '' : this.titles.push(name);
+        this.objectJSON.forEach(object => {
+          Object.keys(object).filter((el) => {
+            let header = el.slice(0, 1).toUpperCase() + el.slice(1)
+            this.headers.includes(header) ? '' : this.headers.push(header);
           })
           this.isFetching = !this.isFetching
         })
       }
+    },
+    getToCSV(objectJSON) {
+
+      this.headers = []
+      this.isFetching = !this.isFetching
+      this.objectJSON = JSON.parse(objectJSON);
+
+      this.objectJSON.forEach(object => {
+        Object.keys(object).filter((el) => {
+          let header = el.slice(0, 1).toUpperCase() + el.slice(1)
+          this.headers.includes(header) ? '' : this.headers.push(header);
+        })
+        //this.isFetching = !this.isFetching
+      })
+
     },
     handleBlur() {
       this.error = ''
@@ -74,6 +94,32 @@ export default {
     setValue() {
       this.modelform = JSON.stringify(this.newval);
       this.isFetching = !this.isFetching
+    },
+    saveTocsv(){
+      this.objectJSON = JSON.parse(this.modelform)
+      console.log('objectJSON:',typeof(this.objectJSON))
+      console.log('objectJSON:',this.objectJSON)
+      const header = this.objectJSON.map((x) => Object.keys(x))
+          .reduce((acc, cur) => (acc.length > cur.length ? acc : cur), []);
+
+      // specify how you want to handle null values here
+      const replacer = (key, value) => (
+          value === undefined || value === null ? '' : value);
+      let csv = this.objectJSON.map((row) => header.map(
+          (fieldName) => JSON.stringify(row[fieldName], replacer)).join(','));
+      csv = [header.join(','), ...csv];
+      const csvObject=csv.join('\r\n');
+       // csv.join('\r\n');
+      console.log('csvObject:',csvObject)
+      // var fs = require('fs');
+      this.writeFile('data.csv',csvObject , 'utf8', function (err) {
+        if (err) {
+          console.log('Some error occured - file either not saved or corrupted file saved.');
+        } else{
+          console.log('It\'s saved!');
+        }
+        // callback("data_saved | assets/distanceInfo.csv")
+      });
     }
   },
   watch: {

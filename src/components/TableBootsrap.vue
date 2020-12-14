@@ -1,16 +1,16 @@
 <template>
   <div class="tabl_btsrp">
-  <table class="table table-hover table-dark" v-for="(title,index) in titles" :key="index" >
+  <table class="table table-hover table-dark" v-for="(header,index) in headers" :key="index" >
     <thead >
     <tr>
-      <th scope="col">{{title}}</th>
+      <th scope="col">{{header}}</th>
 
        </tr>
     </thead>
     <tbody v-for="(val,index) in objectJSON" :key="index">
     <tr>
       <td>
-        <input id="index" v-model="val[title.toLowerCase()]" />
+        <input id="index" v-model="val[header.toLowerCase()]" />
       </td>
       </tr>
     </tbody>
@@ -21,7 +21,7 @@
 <script>
 export default {
 name: "TableBootsrap",
-  props: ['titles', 'objectJSON'],
+  props: ['headers', 'objectJSON'],
 }
 </script>
 
